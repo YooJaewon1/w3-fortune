@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍀</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="date-display">
+        <p id="date"></p>
+    </div>
+        <script>
+            function updateDate() {
+                const now = new Date();
+                const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+                const dateString = now.toLocaleDateString('ko-KR', options);
+                document.getElementById('date').textContent = dateString;
+            }
+            window.onload = updateDate;
+        </script>
+
+    <p>오늘 당신의 <sapn style="color:aquamarine;">행운 컬러</sapn>는    </p>
+    <div class="color-box" id="colorBox">🍀<br>눌러 확인해봐요.</div>
+
+    <button id="changeColorButton">🍀</button>
+    <div class="result" id="resultText"></div>
+
+
+    <script>
+        const colorBox = document.getElementById('colorBox');
+        const button = document.getElementById('changeColorButton');
+        const resultText = document.getElementById('resultText');
+        let interval;
+        let finalColor = '';
+        let clickCount = 0;
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function changeColor() {
+            const color = getRandomColor();
+            colorBox.style.backgroundColor = color;
+            finalColor = color; 
+        }
+
+        function startColorChange() {
+            interval = setInterval(changeColor, 100);
+        }
+
+        function stopColorChange() {
+            clearInterval(interval);
+            const randomText = getRandomText();
+            resultText.textContent = randomText;
+            resultText.style.color = finalColor; // 텍스트 색상 변경
+        }
+
+        function getRandomText() {
+            const texts = ['늘 행운이 가득하길 바랍니다.', '오늘도 좋은 일이 가득하길 바라요.', 
+            '밝은 미소 잃지 않는 하루 보내세요.', 
+            '오늘 하루도 의미 있는 시간 보내세요.',];
+            return texts[Math.floor(Math.random() * texts.length)];
+        }
+
+        button.addEventListener('click', () => {
+            clickCount++;
+            if (clickCount === 1) {
+                colorBox.textContent = ''; 
+                startColorChange();
+            } else if (clickCount === 2) {
+                stopColorChange();
+            } else if (clickCount === 3) {
+                alert(`오늘의 색상 이름은 ${getColorName(finalColor)}입니다.
+좋은 하루 보내세요🍀`);
+                clickCount = 0; 
+            }
+        });
+
+        function getColorName(color) {
+            const rgb = color.match(/\w\w/g).map(x => parseInt(x, 16));
+            const [r, g, b] = rgb;
+
+            // 색상 이름 판단 - 더 세밀한 조건
+            if (r > g && r > b) {
+                if (r > 200) return 'Red';
+                else return 'Pink';
+            } else if (g > r && g > b) {
+                if (g > 200) return 'Green';
+                else return 'Lime';
+            } else if (b > r && b > g) {
+                if (b > 200) return 'Blue';
+                else return 'Cyan';
+            } else if (r > 200 && g > 200) return 'Yellow';
+            else if (r > 200 && b > 200) return 'Magenta';
+            else if (g > 200 && b > 200) return 'Cyan';
+            else if (r < 50 && g < 50 && b < 50) return 'Black';
+            else if (r > 200 && g > 200 && b > 200) return 'White';
+            else return 'Color';
+        }
+    </script>
+
+</body>
+</html>
